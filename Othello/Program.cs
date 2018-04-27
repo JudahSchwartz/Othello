@@ -81,10 +81,11 @@ namespace Othello
             }
 
             Board board = new Board();
-            bool color = board.Turn;
+            
             bool winner;
             while (!board.GameOver(out winner))
             {
+                bool color = board.Turn;
                 DisplayBoard(board);
                 Console.Write(color ? "White" : "Black");
                 Console.WriteLine("'s turn. Pick a spot(v,h)");
@@ -93,7 +94,6 @@ namespace Othello
                 if (board.PossibleMoves().Select(s=>s.Point).Contains(p))
                 {
                     board.PlacePiece(p.X, p.Y, color);
-                    color = !color;
                 }
                 else
                     Console.WriteLine("Not a valid move.");
@@ -327,6 +327,10 @@ namespace Othello
         {
             Spots[x, y].Color = color;
             Turn = !Turn;
+            if (PossibleMoves().Count == 0)
+            {//Not having a move forfeits your turn
+                Turn = !Turn;
+            }
             return Spots[x, y].TurnPieces();
         }
 
